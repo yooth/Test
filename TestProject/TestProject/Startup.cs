@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using TestProject.Controllers.Config;
 using TestProject.Domain.Repositories;
 using TestProject.Domain.Services;
 using TestProject.Persistence.Contexts;
@@ -30,7 +31,13 @@ namespace TestProject
         {
             services.AddMemoryCache();
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddMvc()
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
+                .ConfigureApiBehaviorOptions(options =>
+                {
+                    // Adds a custom error response factory when ModelState is invalid
+                    options.InvalidModelStateResponseFactory = InvalidModelStateResponseFactory.ProduceErrorResponse;
+                });
 
             services.AddDbContext<AppDbContext>
             (options => options.UseSqlServer(Configuration.GetConnectionString("TestDatabase")));
