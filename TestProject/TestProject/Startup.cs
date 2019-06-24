@@ -14,6 +14,7 @@ using TestProject.Domain.Services;
 using TestProject.Persistence.Contexts;
 using TestProject.Persistence.Repositories;
 using TestProject.Services;
+using Swashbuckle.AspNetCore.Swagger;
 
 namespace TestProject
 {
@@ -30,6 +31,25 @@ namespace TestProject
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMemoryCache();
+
+            services.AddSwaggerGen(cfg =>
+            {
+                cfg.SwaggerDoc("v1", new Info
+                {
+                    Title = "Test Project API",
+                    Version = "v1.0",
+                    Description = "Test Project API",
+                    Contact = new Contact
+                    {
+                        Name = "Yooth",
+                        Url = "https://github.com/yooth/Test",
+                    },
+                    License = new License
+                    {
+                        Name = "MIT",
+                    },
+                });
+            });
 
             services.AddMvc()
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
@@ -65,6 +85,14 @@ namespace TestProject
             }
 
             app.UseHttpsRedirection();
+
+            app.UseSwagger();
+
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "TestProject API");
+            });
+
             app.UseMvc();
         }
     }
