@@ -12,7 +12,7 @@ using TestProject.Domain.Repositories;
 using TestProject.Domain.Services;
 using TestProject.Persistence.Contexts;
 using TestProject.Persistence.Repositories;
-
+using TestProject.Services;
 
 namespace TestProject
 {
@@ -34,6 +34,14 @@ namespace TestProject
 
             services.AddDbContext<AppDbContext>
             (options => options.UseSqlServer(Configuration.GetConnectionString("TestDatabase")));
+
+            services.AddScoped<ICustomerRepository, CustomerRepository>();
+            services.AddScoped<ITransactionRepository, TransactionRepository>();
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+            services.AddScoped<ICustomerService, CustomerService>();
+
+            services.AddAutoMapper();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
